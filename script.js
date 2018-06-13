@@ -4,6 +4,8 @@ var imageUpload = function () {
     this.view = document.getElementById('view')
     this.selectBtn = document.getElementById('select')
     this.loadding = document.getElementById('loadding')
+    this.mask = document.getElementById('mask')
+    this.url = 'http://192.168.214.205:5000/'
     this.image = new Image()
     this.init()
 }
@@ -103,7 +105,6 @@ imageUpload.prototype.render = function () {
 
 imageUpload.prototype.upload = function (fileData) {
     var _this = this
-    var url = 'http://192.168.214.205:5000/'
     var xhr = new XMLHttpRequest();
     var formData = new FormData();
     formData.append('image', fileData)
@@ -111,13 +112,18 @@ imageUpload.prototype.upload = function (fileData) {
         _this.loadding.style.display = 'none'
         if (xhr.readyState == 4) {
             if (xhr.status == 200) {
+                var mask = document.getElementById('mask')
+                mask.style.opacity = 1
+                setTimeout(function () {
+                    mask.style.opacity = 0
+                }, 2000)
                 console.log(xhr.responseText)
             } else {
                 console.error(xhr.responseText)
             }
         }
     }
-    xhr.open('POST', url, true);
+    xhr.open('POST', _this.url, true);
     xhr.send(formData);
 }
 
