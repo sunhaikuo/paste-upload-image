@@ -1,0 +1,12 @@
+
+.idea
+*.iml
+.DS_Store
+dist
+build
+node_modules
+node_modules_stable
+out
+gen
+live
+/.history
