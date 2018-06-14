@@ -20,7 +20,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
-app.post('/', multipartMiddleware, function (req, res) {
+app.post('/upload', multipartMiddleware, function (req, res) {
+
+    console.log(req.hostname)
 
     const cookie = req.cookies
     let uid = ''
@@ -31,8 +33,6 @@ app.post('/', multipartMiddleware, function (req, res) {
         uid = uid.replace('-', '')
         uid.replace
     }
-    console.log('cookie', uid)
-
     let data = req.body.image
     let ext = data.substring(11, data.indexOf(';'))
 
@@ -48,11 +48,9 @@ app.post('/', multipartMiddleware, function (req, res) {
     fs.ensureDirSync(imgPath)
     const fileName = imgPath + '/' + title + '.' + ext
     console.log(fileName)
-    fs.writeFile(fileName, bitmap, function () {
-        console.log('write success!')
-    })
+    fs.writeFile(fileName, bitmap)
     res.cookie('uid', uid)
-    res.send({ success: true, msg: '' })
+    res.json({ success: true, msg: '', url: 'http://192.168.214.205:5000/images/' + uid + '/' + title + '.' + ext })
 })
 
 app.listen(5000, function () {

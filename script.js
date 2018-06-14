@@ -5,7 +5,7 @@ var imageUpload = function () {
     this.selectBtn = document.getElementById('select')
     this.loadding = document.getElementById('loadding')
     this.mask = document.getElementById('mask')
-    this.url = 'http://192.168.214.205:5000/'
+    this.domain = 'http://192.168.214.205:5000/'
     this.image = new Image()
     this.init()
 }
@@ -15,6 +15,11 @@ imageUpload.prototype.init = function () {
     // 自动获取焦点
     document.body.addEventListener('paste', this.paste.bind(this))
     this.selectBtn.addEventListener('change', this.select.bind(this))
+    // 设置复制
+    var clipboard = new ClipboardJS('.copy-btn')
+    clipboard.on('success', function (e) {
+        _this.mask.style.opacity = 0
+    })
 }
 
 imageUpload.prototype.select = function (e) {
@@ -108,23 +113,36 @@ imageUpload.prototype.upload = function (fileData) {
     var xhr = new XMLHttpRequest();
     var formData = new FormData();
     formData.append('image', fileData)
-    xhr.onreadystatechange = function (e) {
+    xhr.onloadstart = function () {
         _this.loadding.style.display = 'none'
+    }
+    xhr.responseType = 'json'
+    xhr.onreadystatechange = function (e) {
         if (xhr.readyState == 4) {
             if (xhr.status == 200) {
-                var mask = document.getElementById('mask')
-                mask.style.opacity = 1
-                setTimeout(function () {
-                    mask.style.opacity = 0
-                }, 2000)
-                console.log(xhr.responseText)
+                var response = xhr.response
+                if (response.success) {
+                    _this.uploadSuccess.call(_this, xhr.response)
+                } else {
+                    _this.uploadError.call(_this, xhr.response)
+                }
             } else {
                 console.error(xhr.responseText)
             }
         }
     }
-    xhr.open('POST', _this.url, true);
+    xhr.open('POST', _this.domain + 'upload', true);
     xhr.send(formData);
+}
+
+imageUpload.prototype.uploadError = function (data) {
+
+}
+
+imageUpload.prototype.uploadSuccess = function (data) {
+    var mask = document.getElementById('mask')
+    mask.style.opacity = 1
+    document.getElementById('url').value = data.url
 }
 
 var upload = new imageUpload()
