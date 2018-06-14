@@ -5,7 +5,7 @@ var imageUpload = function () {
     this.selectBtn = document.getElementById('select')
     this.loadding = document.getElementById('loadding')
     this.mask = document.getElementById('mask')
-    this.domain = 'http://192.168.214.205:5000/'
+    this.domain = 'https://sunhaikuo.cn/'
     this.image = new Image()
     this.init()
 }
@@ -18,7 +18,7 @@ imageUpload.prototype.init = function () {
     // 设置复制
     var clipboard = new ClipboardJS('.copy-btn')
     clipboard.on('success', function (e) {
-        _this.mask.style.opacity = 0
+        _this.setMask(false)
     })
 }
 
@@ -50,7 +50,12 @@ imageUpload.prototype.readFile = function (fileData) {
         var res = e.target.result
         _this.image.src = res
         _this.render()
-        _this.zip.call(_this)
+
+        if (size > 1024 * 1024) {
+            _this.zip.call(_this)
+        } else {
+            _this.upload(res)
+        }
 
         // 生成图片，然后展示
         _this.loadding.style.display = 'block'
@@ -114,7 +119,6 @@ imageUpload.prototype.upload = function (fileData) {
     var formData = new FormData();
     formData.append('image', fileData)
     xhr.onloadstart = function () {
-        _this.loadding.style.display = 'none'
     }
     xhr.responseType = 'json'
     xhr.onreadystatechange = function (e) {
@@ -127,11 +131,11 @@ imageUpload.prototype.upload = function (fileData) {
                     _this.uploadError.call(_this, xhr.response)
                 }
             } else {
-                console.error(xhr.responseText)
+                alert('出错啦~一会再试试')
             }
         }
     }
-    xhr.open('POST', _this.domain + 'upload', true);
+    xhr.open('POST', _this.domain + 'api/upload', true);
     xhr.send(formData);
 }
 
@@ -140,9 +144,21 @@ imageUpload.prototype.uploadError = function (data) {
 }
 
 imageUpload.prototype.uploadSuccess = function (data) {
-    var mask = document.getElementById('mask')
-    mask.style.opacity = 1
+    this.loadding.style.display = 'none'
     document.getElementById('url').value = data.url
+    this.setMask(true)
+}
+
+imageUpload.prototype.setMask = function (isShow) {
+    if (isShow) {
+        this.mask.style.left = 0
+        this.mask.style.top = 0
+        this.mask.style.opacity = 1
+    } else {
+        this.mask.style.left = '-100%'
+        this.mask.style.top = '-100%'
+        this.mask.style.opacity = 0
+    }
 }
 
 var upload = new imageUpload()

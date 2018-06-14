@@ -20,6 +20,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
+app.get('/api/test', function (req, res) {
+    res.send('hello test')
+})
+
 app.post('/upload', multipartMiddleware, function (req, res) {
 
     console.log(req.hostname)
@@ -50,10 +54,10 @@ app.post('/upload', multipartMiddleware, function (req, res) {
     console.log(fileName)
     fs.writeFile(fileName, bitmap)
     res.cookie('uid', uid)
-    res.json({ success: true, msg: '', url: 'http://192.168.214.205:5000/images/' + uid + '/' + title + '.' + ext })
+    res.json({ success: true, msg: '', url: 'https://sunhaikuo.cn/images/' + uid + '/' + title + '.' + ext })
 })
 
 app.listen(5000, function () {
-    console.log('Start Success!')
+    console.log('Start 5000 Success!')
     // opn('http://localhost:5000/index.html')
 })
