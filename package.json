@@ -2,8 +2,10 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "connect-multiparty": "^2.0.0",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
     "fs-extra": "^6.0.1",
-    "opn": "^5.3.0"
+    "opn": "^5.3.0",
+    "uuid": "^3.2.1"
   }
 }
