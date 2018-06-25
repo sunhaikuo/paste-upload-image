@@ -51,7 +51,7 @@ imageUpload.prototype.readFile = function (fileData) {
         _this.image.src = res
         _this.render()
 
-        if (size > 1024 * 1024) {
+        if (size > 1024 * 1024 * 1.5) {
             _this.zip.call(_this)
         } else {
             _this.upload(res)
@@ -73,7 +73,7 @@ imageUpload.prototype.zip = function () {
         var originWidth = this.width;
         var originHeight = this.height;
         // 最大尺寸限制
-        var maxWidth = 400, maxHeight = 400;
+        var maxWidth = 600, maxHeight = 600;
         // 目标尺寸
         var targetWidth = originWidth, targetHeight = originHeight;
         // 图片尺寸超过400x400的限制

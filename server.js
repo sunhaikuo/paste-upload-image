@@ -24,7 +24,7 @@ app.get('/api/test', function (req, res) {
     res.send('hello test')
 })
 
-app.post('/upload', multipartMiddleware, function (req, res) {
+app.post('/api/upload', multipartMiddleware, function (req, res) {
 
     console.log(req.hostname)
 
